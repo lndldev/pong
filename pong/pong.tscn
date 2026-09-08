@@ -1,3 +1,115 @@
 [gd_scene format=3 uid="uid://cbrve2j7ssaiq"]
 
+[ext_resource type="Script" uid="uid://b37eg3p5dq5xa" path="res://pong.gd" id="1_4opyw"]
+[ext_resource type="Script" uid="uid://d2m08xbn7i5sa" path="res://ball.gd" id="2_m5tya"]
+[ext_resource type="Texture2D" uid="uid://chvsu0af2ufge" path="res://icon.svg" id="2_pkvn5"]
+[ext_resource type="Script" uid="uid://bmo2addm0lps4" path="res://player.gd" id="4_m5tya"]
+[ext_resource type="Script" uid="uid://dpfq02nio54r3" path="res://enemy.gd" id="5_eipaa"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h6m2q"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_pkvn5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m5tya"]
+size = Vector2(20, 160)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_h6m2q"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_fkxu7"]
+
 [node name="pong" type="Node2D" unique_id=1386138947]
+script = ExtResource("1_4opyw")
+
+[node name="ball" type="CharacterBody2D" parent="." unique_id=929975942]
+script = ExtResource("2_m5tya")
+
+[node name="Sprite2D" type="Sprite2D" parent="ball" unique_id=708047123]
+position = Vector2(-2.3841858e-07, 2.3841858e-07)
+scale = Vector2(0.1484375, 0.15234375)
+texture = ExtResource("2_pkvn5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ball" unique_id=1333406589]
+shape = SubResource("CircleShape2D_h6m2q")
+
+[node name="player" type="CharacterBody2D" parent="." unique_id=1037888955 groups=["players"]]
+script = ExtResource("4_m5tya")
+
+[node name="Sprite2D" type="Sprite2D" parent="player" unique_id=1084171405]
+scale = Vector2(20, 160)
+texture = SubResource("PlaceholderTexture2D_pkvn5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player" unique_id=930661357]
+shape = SubResource("RectangleShape2D_m5tya")
+
+[node name="enemy" type="CharacterBody2D" parent="." unique_id=815683027 groups=["players"]]
+script = ExtResource("5_eipaa")
+
+[node name="Sprite2D" type="Sprite2D" parent="enemy" unique_id=729645940]
+scale = Vector2(20, 160)
+texture = SubResource("PlaceholderTexture2D_pkvn5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="enemy" unique_id=640369421]
+shape = SubResource("RectangleShape2D_m5tya")
+
+[node name="top_wall" type="StaticBody2D" parent="." unique_id=1106665751 groups=["walls"]]
+position = Vector2(0, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="top_wall" unique_id=1302904408]
+rotation = 3.1415927
+shape = SubResource("WorldBoundaryShape2D_h6m2q")
+
+[node name="bottom_wall" type="StaticBody2D" parent="." unique_id=821801891 groups=["walls"]]
+position = Vector2(0, 500)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="bottom_wall" unique_id=1728340859]
+shape = SubResource("WorldBoundaryShape2D_h6m2q")
+
+[node name="header_bg" type="ColorRect" parent="." unique_id=1419235918]
+anchors_preset = 10
+anchor_right = 1.0
+offset_right = 800.0
+offset_bottom = 100.0
+grow_horizontal = 2
+color = Color(0, 0, 0, 1)
+
+[node name="footer_bg" type="ColorRect" parent="." unique_id=465002158]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 500.0
+offset_right = 800.0
+offset_bottom = 600.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0, 0, 0, 1)
+
+[node name="header_ui" type="HBoxContainer" parent="." unique_id=1327869945]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_right = 800.0
+offset_bottom = 100.0
+grow_horizontal = 2
+
+[node name="player_score" type="Label" parent="header_ui" unique_id=555119699]
+layout_mode = 2
+
+[node name="info" type="Label" parent="header_ui" unique_id=1960995130]
+layout_mode = 2
+
+[node name="enemy_score" type="Label" parent="header_ui" unique_id=605015099]
+layout_mode = 2
+
+[node name="goal_left" type="StaticBody2D" parent="." unique_id=1712349414 groups=["goals"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="goal_left" unique_id=599545145]
+rotation = 1.5707964
+shape = SubResource("WorldBoundaryShape2D_fkxu7")
+
+[node name="goal_timer" type="Timer" parent="." unique_id=1019501622]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="goal_scored" from="ball" to="." method="_on_ball_goal_scored"]
+[connection signal="timeout" from="goal_timer" to="." method="_on_goal_timer_timeout"]
